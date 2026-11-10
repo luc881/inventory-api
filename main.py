@@ -17,8 +17,14 @@ def create(p: Product):
     return {"id": next_id - 1, **p.model_dump()}
 
 @app.get("/products")
-def list_products():
-    return products
+def list_products(max_price: float | None = None):
+    if max_price is None:                       # sin ?max_price: devuelve todo
+        return products
+    filtered = {}
+    for pid, product in products.items():       # pid = id, product = {"name": ..., "price": ...}
+        if product["price"] <= max_price:
+            filtered[pid] = product
+    return filtered
 
 @app.get("/products/{pid}")
 def get_product(pid: int):

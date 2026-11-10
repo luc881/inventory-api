@@ -27,3 +27,17 @@ def test_find_product(client):
     assert r.json()["name"] == "Terrarium"
     assert r.json()["price"] == 301
 
+def test_list_all_products(client):
+    client.post("/products", json={"name": "Terrarium", "price": 250})
+    client.post("/products", json={"name": "Lamp", "price": 400})
+    r = client.get("/products")
+    assert r.status_code == 200
+    assert len(r.json()) == 2
+
+
+def test_filter_by_max_price(client):
+    client.post("/products", json={"name": "Terrarium", "price": 250})
+    client.post("/products", json={"name": "Lamp", "price": 400})
+    r = client.get("/products", params={"max_price": 300})   # equivale a /products?max_price=300
+    assert r.status_code == 200
+    assert r.json() == {"1": {"name": "Terrarium", "price": 250.0}}
