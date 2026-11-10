@@ -20,3 +20,10 @@ def test_invalid_price(client):
 def test_delete_missing_product(client):
     r = client.delete("/products/99")
     assert r.status_code == 404
+
+def test_find_product(client):
+    client.post("/products", json={"name": "Terrarium", "price": 301})
+    r =  client.get("/products/1")
+    assert r.json()["name"] == "Terrarium"
+    assert r.json()["price"] == 301
+

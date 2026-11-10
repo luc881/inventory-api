@@ -20,6 +20,12 @@ def create(p: Product):
 def list_products():
     return products
 
+@app.get("/products/{pid}")
+def get_product(pid: int):
+    if pid not in products:
+        raise HTTPException(status_code=404, detail="Not found")
+    return products[pid]
+
 @app.put("/products/{pid}")
 def replace(pid: int, p: Product):
     products[pid] = p.model_dump()
